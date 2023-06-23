@@ -13,8 +13,6 @@ const HomeScreen = ({ route }) => {
   const { token } = route.params;
   const navigation = useNavigation();
 
-  console.log(token, 'token');
-
   // Check tokens of a meter number
   const handleCheckTokens = async () => {
     if (!meterNumber) {
@@ -95,7 +93,7 @@ const HomeScreen = ({ route }) => {
             );
           })}
         
-        <CustomButton text="Buy Electricity" onPress={handleGoBack} bg="#092468" color="white" />
+        <CustomButton text="Buy Electricity" onPress={handleGoBack} bg="#092468" color="white" width='w-80'/>
       </View>
     </ScrollView>
   );

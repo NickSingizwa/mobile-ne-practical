@@ -79,6 +79,7 @@ const PaymentScreen = () => {
             //clear all textfields and change the loading state
             setAmount('');
             setMeterNumber('');
+            setValidationMessage(''); 
             setLoading(false);
 
             Alert.alert('Payment Success', response?.data?.message);
@@ -112,7 +113,7 @@ const PaymentScreen = () => {
                 {numOfDays > 0 && <Text style={styles.validationText}>{`Lighting will last for ${numOfDays} days.`}</Text>}
                 {validationMessage !== '' && <Text style={styles.validationText}>{validationMessage}</Text>}
                 <CustomInput value={meterNumber} placeholder="Meter number" keyBoardType="default" HiddenText onChange={handleMeterChange}/>
-                <CustomButton text={loading ? 'Processing ...' : 'Continue'} onPress={handleProceedPayment} bg='#092468' color='white'/>
+                <CustomButton text={loading ? 'Processing ...' : 'Continue'} onPress={handleProceedPayment} bg='#092468' color='white' width='w-80'/>
                 </View>
             </View>
             </View>
