@@ -68,7 +68,7 @@ const HomeScreen = ({ route }) => {
           <CustomInput
             value={tokenToValidate}
             placeholder="Enter Token to validate"
-            keyboardType="numeric"
+            keyBoardType="numeric"
             onChange={setTokenToValidate}
           />
           <CustomButton text="Validate Token" onPress={handleTokenValidation} bg="#092468" color="white" />
@@ -78,7 +78,7 @@ const HomeScreen = ({ route }) => {
           <CustomInput
             value={meterNumber}
             placeholder="Enter meter number"
-            keyboardType="default"
+            keyBoardType="numeric"
             onChange={setMeterNumber}
           />
           <CustomButton text="Check Tokens" onPress={handleCheckTokens} bg="#092468" color="white" />

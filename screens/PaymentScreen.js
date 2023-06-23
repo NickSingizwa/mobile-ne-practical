@@ -41,7 +41,7 @@ const PaymentScreen = () => {
       setMeterNumber(text);
     };
  
-    //on login button click
+    //on continue button click
     const handleProceedPayment = async ()=>{
       //check if all fields are entered
         if (!amount || !meterNumber) {
@@ -112,7 +112,7 @@ const PaymentScreen = () => {
                 <CustomInput value={amount} placeholder="Amount of money(Rwf)" keyBoardType="numeric" onChange={handleAmountChange}/>
                 {numOfDays > 0 && <Text style={styles.validationText}>{`Lighting will last for ${numOfDays} days.`}</Text>}
                 {validationMessage !== '' && <Text style={styles.validationText}>{validationMessage}</Text>}
-                <CustomInput value={meterNumber} placeholder="Meter number" keyBoardType="default" HiddenText onChange={handleMeterChange}/>
+                <CustomInput value={meterNumber} placeholder="Meter number" keyBoardType="numeric" HiddenText onChange={handleMeterChange}/>
                 <CustomButton text={loading ? 'Processing ...' : 'Continue'} onPress={handleProceedPayment} bg='#092468' color='white' width='w-80'/>
                 </View>
             </View>
