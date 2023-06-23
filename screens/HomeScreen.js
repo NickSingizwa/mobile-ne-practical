@@ -80,7 +80,7 @@ const HomeScreen = ({ route }) => {
           <CustomInput
             value={meterNumber}
             placeholder="Enter meter number"
-            keyboardType="numeric"
+            keyboardType="default"
             onChange={setMeterNumber}
           />
           <CustomButton text="Check Tokens" onPress={handleCheckTokens} bg="#092468" color="white" />
@@ -95,7 +95,7 @@ const HomeScreen = ({ route }) => {
             );
           })}
         
-        <CustomButton text="Go Back" onPress={handleGoBack} bg="#092468" color="white" />
+        <CustomButton text="Buy Electricity" onPress={handleGoBack} bg="#092468" color="white" />
       </View>
     </ScrollView>
   );

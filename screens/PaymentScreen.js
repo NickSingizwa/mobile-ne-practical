@@ -83,10 +83,8 @@ const PaymentScreen = () => {
 
             Alert.alert('Payment Success', response?.data?.message);
 
-            console.log("responsetoken",response?.data?.token)
-
             //redirect to home screen
-            navigation.navigate('Home', { token: response?.data?.token })
+            navigation.navigate('Home', { token: response?.data?.data?.token })
           }
           else{
             setLoading(false);
@@ -113,7 +111,7 @@ const PaymentScreen = () => {
                 <CustomInput value={amount} placeholder="Amount of money(Rwf)" keyBoardType="numeric" onChange={handleAmountChange}/>
                 {numOfDays > 0 && <Text style={styles.validationText}>{`Lighting will last for ${numOfDays} days.`}</Text>}
                 {validationMessage !== '' && <Text style={styles.validationText}>{validationMessage}</Text>}
-                <CustomInput value={meterNumber} placeholder="Meter number" keyBoardType="numeric" HiddenText onChange={handleMeterChange}/>
+                <CustomInput value={meterNumber} placeholder="Meter number" keyBoardType="default" HiddenText onChange={handleMeterChange}/>
                 <CustomButton text={loading ? 'Processing ...' : 'Continue'} onPress={handleProceedPayment} bg='#092468' color='white'/>
                 </View>
             </View>
