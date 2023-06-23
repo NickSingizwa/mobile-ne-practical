@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, Alert } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import CustomInput from '../components/CustomInput';
 import CustomButton from '../components/CustomButton';
 import { API_URL } from '../utils/api';
@@ -10,8 +11,9 @@ const HomeScreen = ({ route }) => {
   const [tokenToValidate, setTokenToValidate] = useState('');
   const [queryResult, setQueryResult] = useState('');
   const { token } = route.params;
+  const navigation = useNavigation();
 
-  console.log(token,"token")
+  console.log(token, 'token');
 
   // Check tokens of a meter number
   const handleCheckTokens = async () => {
@@ -28,11 +30,10 @@ const HomeScreen = ({ route }) => {
 
     try {
       const response = await axios.get(API_URL + `/tokens/${meterNumber}`);
-      console.log(response, 'second res');
       const result = response.data.tokens;
       setQueryResult(result);
     } catch (error) {
-      console.log(error,"catch error");
+      console.log(error, 'catch error');
       setQueryResult('Error occurred while fetching tokens.');
     }
   };
@@ -46,12 +47,15 @@ const HomeScreen = ({ route }) => {
 
     try {
       const response = await axios.get(API_URL + `/validate/${tokenToValidate}`);
-      console.log(response, 'third resss');
       Alert.alert('Token Validation', response?.data?.message);
     } catch (error) {
       console.log(error, 'catch err');
       Alert.alert('Token Validation', error?.response?.data?.message);
     }
+  };
+
+  const handleGoBack = () => {
+    navigation.goBack();
   };
 
   return (
@@ -60,7 +64,6 @@ const HomeScreen = ({ route }) => {
         <Text style={styles.heading}>Dashboard</Text>
         <View style={styles.tokenContainer}>
           <Text style={styles.tokenText}>Latest Token: {token}</Text>
-          {/* <Text style={styles.daysText}>Valid for {numOfDays} days</Text> */}
         </View>
 
         <View style={styles.inputContainer}>
@@ -83,15 +86,16 @@ const HomeScreen = ({ route }) => {
           <CustomButton text="Check Tokens" onPress={handleCheckTokens} bg="#092468" color="white" />
         </View>
 
-        {queryResult !== '' && (
-            queryResult.map((item,index)=>{
-                return(
-                    <View style={styles.queryResultContainer} key={index}>
-                        <Text style={styles.queryResultText}>Token {index+1}: {item.token}</Text>
-                    </View>
-                )
-            })
-        )}
+        {queryResult !== '' &&
+          queryResult.map((item, index) => {
+            return (
+              <View style={styles.queryResultContainer} key={index}>
+                <Text style={styles.queryResultText}>Token {index + 1}: {item.token}</Text>
+              </View>
+            );
+          })}
+        
+        <CustomButton text="Go Back" onPress={handleGoBack} bg="#092468" color="white" />
       </View>
     </ScrollView>
   );

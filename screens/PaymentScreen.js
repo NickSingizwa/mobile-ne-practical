@@ -3,7 +3,6 @@ import { View, Text, StyleSheet, ScrollView, Alert } from 'react-native'
 import { useNavigation } from '@react-navigation/native';
 import CustomInput from '../components/CustomInput'
 import CustomButton from '../components/CustomButton'
-import tw from 'tailwind-react-native-classnames';
 import {API_URL} from '../utils/api';
 import axios from 'axios';
 
@@ -25,7 +24,7 @@ const PaymentScreen = () => {
           setNumOfDays(numOfDays);
           setValidationMessage('');
         } else {
-          setValidationMessage(`Lighting will last for ${numOfDays} days and some hours.`);
+          setValidationMessage('Enter an amount that is a multiple of 100 Rwf.');
         }
       } else {
         setNumOfDays(0);
@@ -75,7 +74,6 @@ const PaymentScreen = () => {
             meter_number: meterNumber,
             amount,
           });
-          console.log("response",response?.data)
     
           if (response?.data?.success) {
             //clear all textfields and change the loading state
@@ -84,6 +82,8 @@ const PaymentScreen = () => {
             setLoading(false);
 
             Alert.alert('Payment Success', response?.data?.message);
+
+            console.log("responsetoken",response?.data?.token)
 
             //redirect to home screen
             navigation.navigate('Home', { token: response?.data?.token })
