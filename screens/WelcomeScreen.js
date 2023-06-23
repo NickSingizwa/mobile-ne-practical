@@ -6,7 +6,7 @@ const WelcomeScreen = ({ navigation }) => {
   //set timer(3seconds) to redirect to signup screen
   useEffect(() => {
     const timer = setTimeout(() => {
-      navigation.navigate('Signup');
+      navigation.navigate('Payment');
     }, 3000);
 
     return () => clearTimeout(timer);
@@ -14,7 +14,7 @@ const WelcomeScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={[tw`flex-1 items-center pt-44`,styles.container]}>
-      <Text style={tw`text-4xl font-bold text-white`}>App Title</Text>
+      <Text style={tw`text-4xl font-bold text-white`}>EUCL</Text>
     </SafeAreaView>
   );
   

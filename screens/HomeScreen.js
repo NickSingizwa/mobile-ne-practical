@@ -1,67 +1,116 @@
-import React,{useState,useEffect} from 'react'
-import { Text, View , FlatList, TouchableOpacity, SafeAreaView, Image } from 'react-native'
-import tw from 'tailwind-react-native-classnames';
-import Menu from '../components/Menu';
-import { API_URL,getConfig } from '../utils/api';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, ScrollView, Alert } from 'react-native';
+import CustomInput from '../components/CustomInput';
+import CustomButton from '../components/CustomButton';
+import { API_URL } from '../utils/api';
 import axios from 'axios';
-import NearbyImage from '../assets/image.png'
-
-// const Sampledata = [
-//     {
-//         id: "1",
-//         image: NearbyImage,
-//         modelName: "Rav 4",
-//         price: "13 Million",
-//         manufactureCompany: "Toyota",
-//         manufactureYear: "2020"
-//     },
-// ]
 
 const HomeScreen = () => {
-    const [data, setData] = useState([]);
+  const [meterNumber, setMeterNumber] = useState('');
+  const [tokenToValidate, setTokenToValidate] = useState('');
+  const [queryResult, setQueryResult] = useState('');
 
-    //fetch data on component mount
-    useEffect(() => {
-        fetchData();
-    }, []);
+  const handleCheckTokens = async () => {
+    if (!meterNumber) {
+      Alert.alert('Error', 'Please enter a meter number.');
+      return;
+    }
 
-    const fetchData = async () => {
-        const config = await getConfig();     //retrieving token
-        try {
-            const response = await axios.get(`${API_URL}/vehicle/all`,config);
-            // console.log(response?.data?.data?.vehicles,"response");
+    try {
+      const response = await axios.get(API_URL + `/tokens/${meterNumber}`);
+      const result = response.data;
+      setQueryResult(result);
+    } catch (error) {
+      console.log(error);
+      setQueryResult('Error occurred while fetching token data.');
+    }
+  };
 
-            //populate the data array with the received response 
-            setData(response?.data?.data?.vehicles);
-        } catch (error) {
-            console.log(error,"catch error");
-        }
-    };
+  const handleTokenValidation = async () => {
+    try {
+      const response = await axios.get(API_URL + `/validate/${tokenToValidate}`);
+      console.log(response,"third resss")
+      Alert.alert('Token Validation', response?.data?.message);
+    } catch (error) {
+      console.log(error,"catch err");
+      Alert.alert('Token Validation', error?.response?.data?.message);
+    }
+  };
+
   return (
-    <SafeAreaView style={tw`flex-1`}>
-        <Text style={{color: '#F7941D', marginTop: 40, marginLeft: 35, marginBottom: 10}}>Registered cars</Text>
+    <ScrollView>
+      <View style={styles.container}>
+        {/* <Text style={styles.heading}>Token Details</Text>
+        <View style={styles.tokenContainer}>
+          <Text style={styles.tokenText}>Token: {token}</Text>
+          <Text style={styles.daysText}>Valid for {numOfDays} days</Text>
+        </View> */}
 
-        {/* mapping the data */}
-        <FlatList data={data} keyExtractor={(item) => item._id} renderItem={({item: {modelName,price,manufactureCompany,photo,manufactureYear}})=>(
-            <TouchableOpacity style={[tw`flex-row items-center px-3 py-2 mt-4 rounded-xl mx-8`,{backgroundColor: '#F8F8FB'}]}>
-            <Image
-                style={tw`rounded p-3 mr-4 w-16 h-16`}
-                source={{uri: photo}}
-                color="white"
-                size={18}
-            />
-                <View>
-                    <Text style={tw`font-semibold`}>{manufactureCompany}</Text>
-                    <Text>{modelName} - <Text style={tw`text-xs text-gray-400`}>{manufactureYear}</Text></Text>
-                    <Text style={tw`text-gray-500`}>{price} Rwf</Text>
-                </View>
-            </TouchableOpacity>
-        )}/>
+        <View style={styles.inputContainer}>
+          <CustomInput
+            value={meterNumber}
+            placeholder="Enter meter number"
+            keyboardType="numeric"
+            onChange={setMeterNumber}
+          />
+          <CustomButton text="Check Tokens" onPress={handleCheckTokens} bg="#092468" color="white" />
+        </View>
 
-      <Menu/>
-    
-  </SafeAreaView>
-  )
-}
+        {queryResult !== '' && (
+          <View style={styles.queryResultContainer}>
+            <Text style={styles.queryResultText}>Query Result: {queryResult}</Text>
+          </View>
+        )}
 
-export default HomeScreen
+        <CustomButton text="Validate Token" onPress={handleTokenValidation} bg="#092468" color="white" />
+      </View>
+    </ScrollView>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#ffffff',
+    paddingVertical: 40,
+  },
+  heading: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+  },
+  tokenContainer: {
+    backgroundColor: '#f0f0f0',
+    padding: 20,
+    borderRadius: 10,
+    marginBottom: 20,
+  },
+  tokenText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  daysText: {
+    fontSize: 16,
+    color: '#888888',
+  },
+  inputContainer: {
+    width: '80%',
+    marginBottom: 20,
+  },
+  queryResultContainer: {
+    backgroundColor: '#f0f0f0',
+    padding: 20,
+    borderRadius: 10,
+    marginBottom: 20,
+  },
+  queryResultText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#092468',
+  },
+});
+
+export default HomeScreen;
