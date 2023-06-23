@@ -86,7 +86,7 @@ const PaymentScreen = () => {
             Alert.alert('Payment Success', response?.data?.message);
 
             //redirect to home screen
-            navigation.navigate('Home')
+            navigation.navigate('Home', { token: response?.data?.token })
           }
           else{
             setLoading(false);

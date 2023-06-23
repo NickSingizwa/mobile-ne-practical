@@ -5,34 +5,51 @@ import CustomButton from '../components/CustomButton';
 import { API_URL } from '../utils/api';
 import axios from 'axios';
 
-const HomeScreen = () => {
+const HomeScreen = ({ route }) => {
   const [meterNumber, setMeterNumber] = useState('');
   const [tokenToValidate, setTokenToValidate] = useState('');
   const [queryResult, setQueryResult] = useState('');
+  const { token } = route.params;
 
+  console.log(token,"token")
+
+  // Check tokens of a meter number
   const handleCheckTokens = async () => {
     if (!meterNumber) {
       Alert.alert('Error', 'Please enter a meter number.');
       return;
     }
 
+    // Check if meter number is 6 digits
+    if (meterNumber.length !== 6) {
+      Alert.alert('Error', 'Incorrect Meter number.');
+      return;
+    }
+
     try {
       const response = await axios.get(API_URL + `/tokens/${meterNumber}`);
-      const result = response.data;
+      console.log(response, 'second res');
+      const result = response.data.tokens;
       setQueryResult(result);
     } catch (error) {
-      console.log(error);
-      setQueryResult('Error occurred while fetching token data.');
+      console.log(error,"catch error");
+      setQueryResult('Error occurred while fetching tokens.');
     }
   };
 
+  // Token validation
   const handleTokenValidation = async () => {
+    if (!tokenToValidate) {
+      Alert.alert('Error', 'Please enter a token to validate.');
+      return;
+    }
+
     try {
       const response = await axios.get(API_URL + `/validate/${tokenToValidate}`);
-      console.log(response,"third resss")
+      console.log(response, 'third resss');
       Alert.alert('Token Validation', response?.data?.message);
     } catch (error) {
-      console.log(error,"catch err");
+      console.log(error, 'catch err');
       Alert.alert('Token Validation', error?.response?.data?.message);
     }
   };
@@ -40,11 +57,21 @@ const HomeScreen = () => {
   return (
     <ScrollView>
       <View style={styles.container}>
-        {/* <Text style={styles.heading}>Token Details</Text>
+        <Text style={styles.heading}>Dashboard</Text>
         <View style={styles.tokenContainer}>
-          <Text style={styles.tokenText}>Token: {token}</Text>
-          <Text style={styles.daysText}>Valid for {numOfDays} days</Text>
-        </View> */}
+          <Text style={styles.tokenText}>Latest Token: {token}</Text>
+          {/* <Text style={styles.daysText}>Valid for {numOfDays} days</Text> */}
+        </View>
+
+        <View style={styles.inputContainer}>
+          <CustomInput
+            value={tokenToValidate}
+            placeholder="Enter Token to validate"
+            keyboardType="numeric"
+            onChange={setTokenToValidate}
+          />
+          <CustomButton text="Validate Token" onPress={handleTokenValidation} bg="#092468" color="white" />
+        </View>
 
         <View style={styles.inputContainer}>
           <CustomInput
@@ -57,12 +84,14 @@ const HomeScreen = () => {
         </View>
 
         {queryResult !== '' && (
-          <View style={styles.queryResultContainer}>
-            <Text style={styles.queryResultText}>Query Result: {queryResult}</Text>
-          </View>
+            queryResult.map((item,index)=>{
+                return(
+                    <View style={styles.queryResultContainer} key={index}>
+                        <Text style={styles.queryResultText}>Token {index+1}: {item.token}</Text>
+                    </View>
+                )
+            })
         )}
-
-        <CustomButton text="Validate Token" onPress={handleTokenValidation} bg="#092468" color="white" />
       </View>
     </ScrollView>
   );
